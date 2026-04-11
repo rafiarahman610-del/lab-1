@@ -3,13 +3,13 @@ import pandas as pd
 import pickle
 
 # Page title
-st.set_page_config(page_title="Churn Predictor", layout="wide")
+st.set_page_config(page_title="churn-model", layout="wide")
 st.title("Customer Churn Prediction System")
 
 # Load model
 @st.cache_resource
 def load_model():
-    with openmodel.pkl", "rb") as file:
+    with open("model.pkl", "rb") as file:
         model = pickle.load(file)
     return model
 
