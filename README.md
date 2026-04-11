@@ -2,9 +2,13 @@
 # Course Information
 
 Course: Introduction to Applied Artificial Intelligence
+
 Semester: BS 8th Semester
+
 Project: Customer Churn Prediction
+
 Author: Rafia Rahman
+
 Date: 11-04-2026 
 
  # Customer Churn Prediction Using Machine Learning
