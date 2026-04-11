@@ -47,8 +47,11 @@ The target variable is Churn (Yes or No).
 
   # week 1 :Exploratory Data Analysis (EDA)
 1.Data cleaning & preprocessing
+
 2.Missing values handling
+
 3.Customer behavior analysis
+
 4.Key churn patterns identified
 
   # week 2 :Machine Learning Models
@@ -66,6 +69,7 @@ Accuracy: 0.794 (79.4%)
 * Evaluate performance
 
 Accuracy: 0.807 (80.7%)
+
 5. Model Comparison
 
 | Model               | Accuracy |
