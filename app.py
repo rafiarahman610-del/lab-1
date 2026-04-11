@@ -20,7 +20,7 @@ col1, col2 = st.columns(2)
 with col1:
     gender = st.selectbox('Gender', ['Male', 'Female'])
     senior_citizen = st.selectbox('Senior Citizen', ['No', 'Yes'])
-    with col2:
+with col2:
     tenure = st.slider('Tenure', 0, 72, 12)
     monthly_charges = st.number_input('Monthly Charges', 0.0, 200.0, 70.0)
     if st.button('Predict Churn'):
