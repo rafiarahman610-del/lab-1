@@ -44,10 +44,7 @@ if prediction == 1:
 else:
     st.success('LOW RISK: Customer will stay')
     st.metric('Retention Probability', f'{100-churn_prob:.1f}%')
-git init
-git add .
-git commit -m "churn app"
-git push
+
 
 
   
