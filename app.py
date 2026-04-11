@@ -9,7 +9,7 @@ st.title("Customer Churn Prediction System")
 # Load model
 @st.cache_resource
 def load_model():
-    with open("best_churn_model.pkl", "rb") as file:
+    with openmodel.pkl", "rb") as file:
         model = pickle.load(file)
     return model
 
@@ -28,7 +28,7 @@ with col2:
     charges = st.number_input("Monthly Charges", 0.0, 200.0, 70.0)
 
 # Prediction
-if st.button("Predict Churn"):
+if st.button(" churn-model"):
     data = {
         "gender": gender,
         "SeniorCitizen": 1 if senior == "Yes" else 0,
