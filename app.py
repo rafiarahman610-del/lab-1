@@ -17,7 +17,7 @@ st.title('Customer Churn Prediction System')
 # Load model
 @st.cache_resource
 def load_model():
-    with open('best_churn_model.pkl', 'rb') as file:
+    with open('model.pkl', 'rb') as file:
         model = pickle.load(file)
     return model
 
