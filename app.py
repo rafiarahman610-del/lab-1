@@ -1,83 +1,115 @@
-
-
-       
 import streamlit as st
 import pandas as pd
 import numpy as np
 import pickle
-import os
+import plotly.graph_objects as go
 
-# Page config
-st.set_page_config(page_title="Customer Churn Predictor", layout="wide")
+# Page configuration
+st.set_page_config(
+    page_title='Customer Churn Predictor',
+    page_icon='📊',
+    layout='wide'
+)
 
-st.title("📊 Customer Churn Prediction System")
+# Title
+st.title('Customer Churn Prediction System')
 
-# ✅ Load model safely
+# Load model
 @st.cache_resource
 def load_model():
-    if not os.path.exists("model.pkl"):
-        st.error("❌ model.pkl file missing hai! Folder check karo.")
-        return None
-    try:
-        with open("model.pkl", "rb") as file:
-            model = pickle.load(file)
-        return model
-    except Exception as e:
-        st.error(f"❌ Model load error: {e}")
-        return None
+    with open('best_churn_model.pkl', 'rb') as file:
+        model = pickle.load(file)
+    return model
 
 model = load_model()
+st.success('Model loaded successfully!')
 
-# ✅ Run only if model loaded
-if model:
+# Layout
+col1, col2 = st.columns(2)
 
-    st.success("✅ Model successfully loaded!")
+# Column 1
+with col1:
+    st.subheader('Customer Demographics')
+    gender = st.selectbox('Gender', ['Male', 'Female'])
+    senior_citizen = st.selectbox('Senior Citizen', ['No', 'Yes'])
+    partner = st.selectbox('Partner', ['No', 'Yes'])
+    dependents = st.selectbox('Dependents', ['No', 'Yes'])
 
-    # Layout
-    col1, col2 = st.columns(2)
+# Column 2
+with col2:
+    st.subheader('Account Information')
+    tenure = st.slider('Tenure (months)', 0, 72, 12)
+    monthly_charges = st.number_input(
+        'Monthly Charges ($)',
+        min_value=0.0,
+        max_value=200.0,
+        value=70.0
+    )
 
-    with col1:
-        gender = st.selectbox("Gender", ["Male", "Female"])
-        senior = st.selectbox("Senior Citizen", ["No", "Yes"])
+# Prediction button
+# Prediction button
+if st.button('Predict Churn', type='primary'):
 
-    with col2:
-        tenure = st.slider("Tenure (months)", 0, 72, 12)
-        monthly = st.number_input("Monthly Charges", 0.0, 200.0, 70.0)
+    # Create input dataframe
+    input_data = {
+        'gender': gender,
+        'SeniorCitizen': 1 if senior_citizen == 'Yes' else 0,
+        'Partner': partner,
+        'Dependents': dependents,
+        'tenure': tenure,
+        'MonthlyCharges': monthly_charges
+    }
 
-    # ✅ Predict button
-    if st.button("🔍 Predict Churn"):
+    input_df = pd.DataFrame([input_data])
 
-        # Input dictionary
-        data = {
-            "SeniorCitizen": 1 if senior == "Yes" else 0,
-            "tenure": tenure,
-            "MonthlyCharges": monthly,
-            "gender_Male": 1 if gender == "Male" else 0,
-            "gender_Female": 1 if gender == "Female" else 0
-        }
+    # Encode input
+    input_encoded = pd.get_dummies(input_df)
 
-        df = pd.DataFrame([data])
+    # Align columns with model
+    try:
+        model_columns = model.feature_names_in_
+        input_encoded = input_encoded.reindex(columns=model_columns, fill_value=0)
+    except:
+        pass
 
-        try:
-            prediction = model.predict(df)[0]
-            prob = model.predict_proba(df)[0][1] * 100
+    # Prediction
+    prediction = model.predict(input_encoded)[0]
+    probability = model.predict_proba(input_encoded)[0]
+    churn_prob = probability[1] * 100
+    retention_prob = 100 - churn_prob
 
-            st.subheader("📈 Result")
+    # Layout for results
+    col3, col4 = st.columns(2)
 
-            if prediction == 1:
-                st.error("🔴 HIGH RISK: Customer will churn")
-                st.metric("Churn Probability", f"{prob:.2f}%")
-            else:
-                st.success("🟢 LOW RISK: Customer will stay")
-                st.metric("Retention Probability", f"{100 - prob:.2f}%")
+    # 🔹 Metric Display
+    with col3:
+        if prediction == 1:
+            st.error('HIGH RISK: Customer likely to churn')
+        else:
+            st.success('LOW RISK: Customer likely to stay')
 
-        except Exception as e:
-            st.error("❌ Feature mismatch ya model issue hai")
-            st.write(e)
+        st.metric("Churn Probability", f"{churn_prob:.1f}%")
+        st.metric("Retention Probability", f"{retention_prob:.1f}%")
 
-else:
-    st.warning("⚠️ Model load nahi hua. Pehle model fix karo.")A
+    # 🔹 Gauge Chart
+    with col4:
+        fig = go.Figure(go.Indicator(
+            mode="gauge+number",
+            value=churn_prob,
+            title={'text': "Churn Risk (%)"},
+            gauge={
+                'axis': {'range': [0, 100]},
+                'bar': {'color': "red" if churn_prob > 50 else "green"},
+                'steps': [
+                    {'range': [0, 50], 'color': "lightgreen"},
+                    {'range': [50, 80], 'color': "yellow"},
+                    {'range': [80, 100], 'color': "red"}
+                ],
+            }
+        ))
 
+        st.plotly_chart(fig, use_container_width=True)
+   
   
 
  
