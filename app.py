@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import pickle
+pickle.dump(model, open("model.pkl", "wb"))
 st.set_page_config(
     page_title='Customer Churn Predictor',
     layout='wide'
@@ -10,7 +11,7 @@ st.set_page_config(
 st.title('Customer Churn Prediction System')
 @st.cache_resource
 def load_model():
-    with open('model.pkl', 'rb') as file:
+    with open("lab-1/model.pkl", "rb") as file:
         model = pickle.load(file)
     return model
 
