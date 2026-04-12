@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import pickle
-pickle.dump(model, open("model.pkl", "wb"))
+
 st.set_page_config(
     page_title='Customer Churn Predictor',
     layout='wide'
