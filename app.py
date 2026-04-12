@@ -11,7 +11,7 @@ st.set_page_config(
 st.title('Customer Churn Prediction System')
 @st.cache_resource
 def load_model():
-    with open("lab-1/model.pkl", "rb") as file:
+    with open("model.pkl", "rb") as file:
         model = pickle.load(file)
     return model
 
